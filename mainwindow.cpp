@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
    
    QObject::connect(uiField.listAll, SIGNAL(doubleClicked(QModelIndex)),
                     this, SLOT(on_listAll_doubleClicked(const QModelIndex&))) ;
-   
+   // test
    QObject::connect(uiField.listNew, SIGNAL(on_listNew_doubleClicked(QModelIndex)),
                     this, SLOT(on_listNew_doubleClicked(const QModelIndex &))) ;
 }
