@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG += c++1y
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,8 +14,24 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    pubfunc.cpp \
+    sqlpatch.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    pubfunc.h \
+    sqlpatch.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    fieldchioce.ui
+
+INCLUDEPATH += "D:/boost_1_62_0/include/boost-1_62"
+
+CONFIG(debug, debug|release) {
+#LIBS += "D:/boost_1_62_0/lib/debug/boost_filesystem-vc140-mt-gd-1_62.dll"
+LIBS += "D:/boost_1_62_0/lib/debug/libboost_locale-vc140-mt-gd-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/debug/libboost_regex-vc140-mt-gd-1_62.lib"
+} else {
+LIBS += "D:/boost_1_62_0/lib/release/libboost_locale-vc140-mt-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/release/libboost_regex-vc140-mt-1_62.lib"
+}
