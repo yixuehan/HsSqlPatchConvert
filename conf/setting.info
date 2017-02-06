@@ -1,0 +1,150 @@
+basePath E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝
+dataTypeFile E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/公共资源/datatypes.xml
+stdfieldsFile E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/公共资源/stdfields.xml
+copyFmt "%s-%s-V1"
+sqlCom
+{
+   preLength 2
+   tablePrefix ""
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/com_Com_TablePatch.sql
+   notePosStr "-- 修改版本    修改日期         修改单         修改人   申请人   修改说明\r\n"
+   note "--V8.15.1.%d   %04d-%02d-%02d      %s   %s   %s 	 %s\r\n" 
+   sqlAdd "prompt\r\n"\
+          "prompt 检查 %1% 表 是否存在 %2% 字段, 不存在则增加......\r\n"\
+          "declare\r\n"\
+          "  v_rowcount integer;\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual where exists(\r\n"\
+          "    select * from col\r\n"\
+          "      where tname = upper('%1%')\r\n"\
+          "        and cname = upper('%2%') );\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    execute immediate 'ALTER TABLE hs_com.%1% ADD %2%  %3%    DEFAULT %4% NOT NULL';\r\n"\
+          "  end if;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+   sqlNew ""
+} 
+
+sqlLast
+{
+   preLength 2
+   tablePrefix "cl_"
+   sqlAdd "prompt\r\n"\
+          "prompt 检查 %1% 表 是否存在 %2% 字段, 不存在则增加......\r\n"\
+          "declare\r\n"\
+          "  v_rowcount integer;\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual where exists(\r\n"\
+          "    select * from col\r\n"\
+          "      where tname = upper('%1%')\r\n"\
+          "        and cname = upper('%2%') );\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    execute immediate 'ALTER TABLE hs_com.%1% ADD %2%  %3%    DEFAULT %4% NOT NULL';\r\n"\
+          "  end if;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+} 
+
+sqlHis
+{
+   preLength 2
+   notePosStr "-- 修改版本   修改日期                 修改单         修改人   申请人   修改说明\r\n"
+   note "--V8.15.1.%d  %02d-%02d-%02d              %s   %s   %s   %s\r\n"
+   tablePrefix "his_"
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/his_Com_TablePatch.sql
+   sqlAdd "prompt\r\n"\
+          "prompt 检查 %1% 表 是否存在 %2% 字段, 不存在则增加......\r\n"\
+          "declare\r\n"\
+          "  v_rowcount integer;\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual where exists(\r\n"\
+          "    select * from col\r\n"\
+          "      where tname = upper('%1%')\r\n"\
+          "        and cname = upper('%2%') );\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    execute immediate 'ALTER TABLE hs_his.%1% ADD %2%  %3%    DEFAULT %4% NOT NULL';\r\n"\
+          "  end if;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+} 
+sqlData
+{
+   preLength 2
+   notePosStr "-- 修改版本   修改日期                  修改单        修改人   申请人   修改说明\r\n"
+   note "--V8.15.1.%d  %04d-%02d-%02d              %s   %s   %s   %s\r\n"
+   tablePrefix "rl_"
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/data_Com_TablePatch.sql
+   sqlAdd "prompt\r\n"\
+          "prompt 检查 %1% 表 是否存在 %2% 字段, 不存在则增加......\r\n"\
+          "declare\r\n"\
+          "  v_rowcount integer;\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual where exists(\r\n"\
+          "    select * from col\r\n"\
+          "      where tname = upper('%1%')\r\n"\
+          "        and cname = upper('%2%') );\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    execute immediate 'ALTER TABLE hs_data.%1% ADD %2%  %3%    DEFAULT %4% NOT NULL';\r\n"\
+          "  end if;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+} 
+sqlFil
+{
+   preLength 2
+   notePosStr "-- 修改版本   修改日期                 修改单         修改人   申请人   修改说明\r\n"
+   note "--V8.15.1.%d  %04d-%02d-%02d              %s   %s   %s   %s\r\n"
+   tablePrefix "fil_"
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/fil_Com_TablePatch.sql
+   sqlAdd "prompt\r\n"\
+          "prompt 检查 %1% 表 是否存在 %2% 字段, 不存在则增加......\r\n"\
+          "declare\r\n"\
+          "  v_rowcount integer;\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual where exists(\r\n"\
+          "    select * from col\r\n"\
+          "      where tname = upper('%1%')\r\n"\
+          "        and cname = upper('%2%') );\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    execute immediate 'ALTER TABLE hs_fil.%1% ADD %2%  %3%    DEFAULT %4% NOT NULL';\r\n"\
+          "  end if;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+}
+
+sqlConfig
+{
+   preLength 3
+   notePosStr "-- 修改版本   修改日期   修改单          修改人   申请人   修改说明\r\n"
+   note "-- V8.15.1.%d %04d%02d%02d   %s   %s   %s   %s\r\n"
+   noteFmt "增加配置%s-%s"
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/user_Com_SysconfigPatch.sql
+   sqlAdd "declare v_rowcount number(5);\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual\r\n"\
+          "  where exists (select 1 from hs_user.sysconfig where config_no = %1%);\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    insert into hs_user.sysconfig (branch_no,config_no,config_name,config_type,manage_level,access_level,data_type,char_config,int_config,str_config,remark) values (8888, %1%, '%2%', '%3%', '%9%', '%10%', '%4%', '%5%', %6%, '%7%', '%8%');\r\n"\
+          "    update hs_user.sysconfig set branch_no = (select branch_no from hs_user.sysarg) where config_no = %1% and branch_no = 8888 and exists(select branch_no from hs_user.sysarg);\r\n"\
+          "  else\r\n"\
+          "    update hs_user.sysconfig set config_name = '%2%', config_type = '%3%', remark = '%8%' where config_no = %1%;\r\n"\
+          "  end if;\r\n"\
+          "  commit;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+}
+
+ori2InterfaceConf conf/ori2Interface.info
+userName "王  凯"
+applyUserName "王  凯"
+modifyNo M201701180367
+newInterface
+{
+    file E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/业务逻辑/消息推送/服务/LS_消息推送_标签设置.service_design
+}

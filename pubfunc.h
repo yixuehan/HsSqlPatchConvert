@@ -2,6 +2,7 @@
 #define PUBFUNC_H
 #include <QString>
 #include <string>
+#include <map>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/info_parser.hpp>
@@ -31,6 +32,13 @@ struct FileInfo
 shared_ptr<boost::property_tree::ptree> getSetting() ;
 
 // void setSetting( const boost::property_tree::ptree &) ;
+struct CopyInfo
+{
+   string name ;
+   string strCopy ;
+};
+
+shared_ptr<map<string, CopyInfo>> getCopy() ;
 
 
 #endif // PUBFUNC_H

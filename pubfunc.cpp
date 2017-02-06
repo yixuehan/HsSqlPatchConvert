@@ -65,3 +65,13 @@ shared_ptr<boost::property_tree::ptree> getSetting()
 //{
 //   *pSetting = new boost::property_tree::ptree(pt) ;
 //}
+
+shared_ptr<map<string, CopyInfo> > getCopy()
+{
+   static shared_ptr<map<string, CopyInfo>> pCopyInfo ;
+   
+   if ( nullptr == pCopyInfo ) {
+      pCopyInfo.reset( new map<string, CopyInfo>);
+   }
+   return pCopyInfo ;
+}

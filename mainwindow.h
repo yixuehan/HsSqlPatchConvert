@@ -28,6 +28,8 @@ private slots:
    
    void on_listNew_doubleClicked(const QModelIndex &index);
    
+   void on_listCopy_doubleClicked(const QModelIndex &index);
+   
 private:
 
 private:

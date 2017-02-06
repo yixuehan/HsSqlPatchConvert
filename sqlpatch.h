@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <algorithm>
 #include <QMessageBox>
+#include <QFileInfo>
 using namespace std ;
 
 void getTypeValue( const string &fieldName, string &strType, string &defaultValue) ;
@@ -21,6 +22,21 @@ struct SqlTable
    {}
    bool bNeed ;
 } ;
+
+// id    配置名称  配置类型  数据类型  char   int str  remark
+struct SqlConfig
+{
+   string id ;
+   string name ;
+   string configType ;
+   string dataType ;
+   string intValue ;
+   string charValue ;
+   string strValue ;
+   string remark ;
+   string manager_level ;
+   string access_level ;
+};
 
 struct SqlInfo
 {
@@ -77,7 +93,11 @@ public:
    
    void genSql( ) ;
    
-   void genSql( const string &strBase ) ;
+   void genSql( const string &strBase )
+   {
+      genAdd( strBase ) ;
+   }
+ 
    
    void genAdd( const string &strBase ) ;
 //   {
@@ -97,20 +117,27 @@ public:
    static void genNote( const string &strBase )
    {
       boost::format fmtNote(getSetting()->get<string>(strBase + ".note")) ;
+      boost::format fmtCopy(getSetting()->get<string>("copyFmt")) ;
+      // 修改单号 版本 
+      auto & mapCopy = *getCopy() ;
       // --V8.15.1.%1%   %2%-%3%-%4%      %5%   %6%   %7% 	 %8%" 
       // 版本号   年 月  日  修改单  修改人 申请人  修改说明
       string notePosStr = getSetting()->get<string>(strBase + ".notePosStr") ;
       auto &notePos = mapSqlInfo[strBase].notePos ;
       const auto &strOldSql = mapSqlInfo[strBase].sqlOldText ;
       notePos = strOldSql.find( notePosStr ) ;
-      //qDebug() << toQStr(notePosStr) << ":" << (size_t)notePos ;
+      qDebug() << toQStr(notePosStr) << ":" << (size_t)notePos ;
       // 记录修改记录的文件位置
       notePos += notePosStr.length() ;
       // 计算版本号
-      auto spacePos = strOldSql.find_first_of(' ', notePos ) ;
+      auto preLength = getSetting()->get<int>(strBase + ".preLength") ;
+      auto spacePos = strOldSql.find_first_of(' ', notePos + preLength ) ;
+      // 取版本
+      fmtCopy % getSetting()->get<string>("modifyNo") % strOldSql.substr( notePos + preLength, spacePos-(notePos + preLength) ) ;
+      
       auto dotPos = strOldSql.find_last_of('.', spacePos ) ;
       string strVer = strOldSql.substr(dotPos+1, spacePos - dotPos-1) ;
-      //qDebug() << toQStr("strBase:" + strBase + "|||strVer:" + strVer) ;
+      qDebug() << toQStr("strBase:" + strBase + "|||strVer:" + strVer + "|||fmtCopy" + fmtCopy.str()) ;
       fmtNote % (std::stoi(strVer)+1) ;
       QDate d = QDate::currentDate(); 
       fmtNote % d.year() % d.month() % d.day() 
@@ -119,26 +146,24 @@ public:
               % getSetting()->get<string>("applyUserName")
               % mapSqlInfo[strBase].changeNote ;
       mapSqlInfo[strBase].note = fmtNote.str() ;
-      mapSqlInfo[strBase].beginNote = boost::algorithm::replace_first_copy(mapSqlInfo[strBase].note, "--", "-- begin ") ;
+      mapSqlInfo[strBase].beginNote = boost::algorithm::replace_first_copy(mapSqlInfo[strBase].note, "--", "\r\n-- begin ") ;
       mapSqlInfo[strBase].endNote = boost::algorithm::replace_first_copy(mapSqlInfo[strBase].note, "--", "-- end ") ;
+      
+      // 记录剪切内容
+      struct CopyInfo copyInfo ;
+      
+      QFileInfo fileInfo ;
+      fileInfo.setFile(toQStr(mapSqlInfo[strBase].sqlFileName));
+      copyInfo.name = toCStr(fileInfo.baseName()) ;
+      copyInfo.strCopy = fmtCopy.str() ;
+      mapCopy[copyInfo.name] = copyInfo ;
+      
       //qDebug() << toQStr(note + ":" + beginNote + ":" + endNote) ;
    }
 
    void setSelectedFields( const vector<string> &fields )
    {
-      mapTableInfo["sqlHis"].bNeed = pt.get<bool>("hsdoc.tablePrimaryInfo.<xmlattr>.history") ;
-      mapTableInfo["sqlData"].bNeed = pt.get<bool>("hsdoc.tablePrimaryInfo.<xmlattr>.rtable") ;
       selectedFields = fields ;
-      
-      if ( mapTableInfo["sqlHis"].bNeed ) {    
-         mapTableInfo["sqlLast"].bNeed = true ;
-         mapTableInfo["sqlFil"].bNeed = true ; 
-      }
-
-      if ( !mapSqlInfo["sqlHis"].bNeed ) mapSqlInfo["sqlHis"].bNeed = mapTableInfo["sqlHis"].bNeed ;
-      if ( !mapSqlInfo["sqlData"].bNeed ) mapSqlInfo["sqlData"].bNeed = mapTableInfo["sqlData"].bNeed ;
-      if ( !mapSqlInfo["sqlLast"].bNeed ) mapSqlInfo["sqlLast"].bNeed = mapTableInfo["sqlLast"].bNeed ;
-      if ( !mapSqlInfo["sqlFil"].bNeed ) mapSqlInfo["sqlFil"].bNeed = mapTableInfo["sqlFil"].bNeed ;
    }
 
    const vector<string> getTableFields() const ; //  必须特化
@@ -183,11 +208,12 @@ private:
 
 private:
    vector<string> selectedFields ;
+   mutable vector<string> fields ;
    boost::property_tree::ptree pt ;
    string tableName ;
    string fileName ;
-   std::map<string, T> mapTableInfo ;
-   static std::map<string, SqlInfo> mapSqlInfo ;
+   mutable std::map<string, T> mapTableInfo ; // 记录字段的信息
+   static std::map<string, SqlInfo> mapSqlInfo ;  // 记录表的sql语句
    static bool bInit ;
 };
 
