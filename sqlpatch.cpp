@@ -263,9 +263,9 @@ void SqlPatch<SqlConfig>::genAdd( const string &strBase )
       fmtNote.clear() ;
       auto & info = mapTableInfo[stdfield] ;
       fmtSql % info.id % info.name % info.configType % info.dataType 
-             % (info.charValue == " " ? "0" : info.charValue)
-             % (info.intValue == " " ? "0" : info.intValue)
-             % info.strValue 
+             % (("" == info.charValue || info.charValue == " ") ? "0" : info.charValue)
+             % (("" == info.intValue || info.intValue == " ") ? "0" : info.intValue)
+             % (("" == info.strValue) ? " " : info.strValue)
              % info.remark % info.manager_level % info.access_level ;
       mapSqlInfo[strBase].sqlText += fmtSql.str() + "\r\n" ;
       

@@ -31,7 +31,15 @@ CONFIG(debug, debug|release) {
 #LIBS += "D:/boost_1_62_0/lib/debug/boost_filesystem-vc140-mt-gd-1_62.dll"
 LIBS += "D:/boost_1_62_0/lib/debug/libboost_locale-vc140-mt-gd-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/debug/libboost_regex-vc140-mt-gd-1_62.lib"
+dst_dir = $$OUT_PWD/debug/conf/
 } else {
 LIBS += "D:/boost_1_62_0/lib/release/libboost_locale-vc140-mt-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/release/libboost_regex-vc140-mt-1_62.lib"
+dst_dir = $$OUT_PWD/release/conf/
 }
+
+src_dir = $$PWD/conf
+#src_dir ~= s,/,\\,g
+#dst_dir ~= s,/,\\,g
+!exists($$dst_dir):system(xcopy $$src_dir $$dst_dir /y /e)
+

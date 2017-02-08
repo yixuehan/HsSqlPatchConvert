@@ -133,18 +133,21 @@ public:
       auto preLength = getSetting()->get<int>(strBase + ".preLength") ;
       auto spacePos = strOldSql.find_first_of(' ', notePos + preLength ) ;
       // ȡ�汾
-      fmtCopy % getSetting()->get<string>("modifyNo") % strOldSql.substr( notePos + preLength, spacePos-(notePos + preLength) ) ;
-      
       auto dotPos = strOldSql.find_last_of('.', spacePos ) ;
       string strVer = strOldSql.substr(dotPos+1, spacePos - dotPos-1) ;
-      qDebug() << toQStr("strBase:" + strBase + "|||strVer:" + strVer + "|||fmtCopy" + fmtCopy.str()) ;
+      //qDebug() << toQStr("strBase:" + strBase + "|||strVer:" + strVer + "|||fmtCopy" + fmtCopy.str()) ;
       fmtNote % (std::stoi(strVer)+1) ;
+      
       QDate d = QDate::currentDate(); 
       fmtNote % d.year() % d.month() % d.day() 
               % getSetting()->get<string>("modifyNo")
               % getSetting()->get<string>("userName")
               % getSetting()->get<string>("applyUserName")
               % mapSqlInfo[strBase].changeNote ;
+      
+      spacePos = fmtNote.str().find_first_of(' ', preLength ) ;
+      fmtCopy % getSetting()->get<string>("modifyNo") % fmtNote.str().substr( preLength, spacePos- preLength ) ;
+      
       mapSqlInfo[strBase].note = fmtNote.str() ;
       mapSqlInfo[strBase].beginNote = boost::algorithm::replace_first_copy(mapSqlInfo[strBase].note, "--", "\r\n-- begin ") ;
       mapSqlInfo[strBase].endNote = boost::algorithm::replace_first_copy(mapSqlInfo[strBase].note, "--", "-- end ") ;
