@@ -16,7 +16,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     pubfunc.cpp \
-    sqlpatch.cpp
+    sqlpatch.cpp \
+    sqlconfig.cpp \
+    sqltable.cpp
+    
 
 HEADERS  += mainwindow.h \
     pubfunc.h \

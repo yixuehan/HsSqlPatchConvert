@@ -13,8 +13,6 @@
 #include <QFileInfo>
 using namespace std ;
 
-void getTypeValue( const string &fieldName, string &strType, string &defaultValue) ;
-
 struct SqlTable
 {
    SqlTable()
@@ -157,7 +155,7 @@ public:
       
       QFileInfo fileInfo ;
       fileInfo.setFile(toQStr(mapSqlInfo[strBase].sqlFileName));
-      copyInfo.name = toCStr(fileInfo.baseName()) ;
+      copyInfo.name = toStr(fileInfo.baseName()) ;
       copyInfo.strCopy = fmtCopy.str() ;
       mapCopy[copyInfo.name] = copyInfo ;
       
@@ -220,6 +218,13 @@ private:
    static bool bInit ;
 };
 
+
+template <class T>
+std::map<string, SqlInfo> SqlPatch<T>::mapSqlInfo ;
+
+
+template <class T>
+bool SqlPatch<T>::bInit = false ;
 
 shared_ptr<SqlPatchInterface> getSqlPatch( const string &strFileName ) ;
 

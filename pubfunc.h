@@ -11,34 +11,32 @@
 #include <boost/locale.hpp>
 using namespace std ;
 
-const char *toCStr(const QString &str);
-
-//const char *toCStr(const char *str);
+//const char *toCStr(const QString &str);
 
 QString toQStr(const string &str);
 
-const char *toCStr(const string &str);
+string toStr(const QString &qStr) ;
 
 void readPtreeFromUtf8(const string &fileName, boost::property_tree::ptree &pt);
-
 
 struct FileInfo
 {
    std::string fileName ;
-   // std::vector<std::string> addFields ;
    boost::property_tree::ptree pt ;
 };
 
 shared_ptr<boost::property_tree::ptree> getSetting() ;
 
-// void setSetting( const boost::property_tree::ptree &) ;
 struct CopyInfo
 {
    string name ;
    string strCopy ;
 };
 
+// 获取剪切板
 shared_ptr<map<string, CopyInfo>> getCopy() ;
 
+// 获取字段名获取对应的oracle类型和默认值
+void getTypeValue( const string &fieldName, string &strType, string &defaultValue ) ;
 
 #endif // PUBFUNC_H

@@ -36,7 +36,7 @@ void MainWindow::on_addField_clicked()
           fileInfo.setFile(fileName);
           if ( ui->listMod->findItems(fileInfo.baseName(), Qt::MatchExactly).count() == 0 ) {
              ui->listMod->addItem(fileInfo.baseName());
-             selectedFiles[toCStr(fileInfo.baseName())] = getSqlPatch(toCStr(fileName)) ;
+             selectedFiles[toStr(fileInfo.baseName())] = getSqlPatch(toStr(fileName)) ;
           }
        }
     }
@@ -49,7 +49,7 @@ void MainWindow::on_listMod_doubleClicked(const QModelIndex &index)
    uiField.listNew->clear();
    
    // 将已添加的新增字段增加到界面中
-   string fileName = toCStr(ui->listMod->item(index.row())->text()) ;
+   string fileName = toStr(ui->listMod->item(index.row())->text()) ;
    for ( auto field : selectedFiles[fileName]->getSelectedFields() ) {
       uiField.listNew->addItem(toQStr(field));
    }
@@ -60,7 +60,7 @@ void MainWindow::on_listMod_doubleClicked(const QModelIndex &index)
    if ( dialogField.exec() ) {
       vector<string> fields ;
       for ( int i = 0 ; i < uiField.listNew->count(); ++i ) {
-         fields.push_back(toCStr(uiField.listNew->item(i)->text())) ;
+         fields.push_back(toStr(uiField.listNew->item(i)->text())) ;
       }
       selectedFiles[fileName]->setSelectedFields(std::move(fields)) ;
    }
@@ -83,7 +83,7 @@ void MainWindow::on_genSqlPatch_clicked()
       msg.exec(); 
       return ;
    }
-   getSetting()->put<string>("modifyNo", toCStr(ui->modifyNo->text())) ;
+   getSetting()->put<string>("modifyNo", toStr(ui->modifyNo->text())) ;
    for ( auto pair : selectedFiles ) {
       pair.second->genSql() ;
    }
@@ -105,7 +105,7 @@ void MainWindow::on_listNew_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_listCopy_doubleClicked(const QModelIndex &index)
 {
-   string copyName = toCStr(ui->listCopy->item(index.row())->text()) ;
+   string copyName = toStr(ui->listCopy->item(index.row())->text()) ;
    string strCopy = (*getCopy())[copyName].strCopy ;
    // 放入剪切板
    QClipboard *board = QApplication::clipboard();  
