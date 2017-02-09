@@ -1,5 +1,4 @@
 #include "sqlpatch.h"
-#include <QFileInfo>
 
 //  系统配置的特化
 template<>

@@ -1,5 +1,5 @@
 #include "pubfunc.h"
-
+#include <QDebug>
 string toStr(const QString &qStr)
 {
    //static string str ;
@@ -44,7 +44,8 @@ void readPtreeFromUtf8(const string &fileName, boost::property_tree::ptree &pt)
    strText = boost::locale::conv::between(strText, "gbk", "utf8") ;
    std::stringstream iostr(strText) ;
    boost::property_tree::read_xml(iostr, pt);
-   
+
+   //qDebug() << toQStr(strText) ;
 }
 
 shared_ptr<boost::property_tree::ptree> getSetting()

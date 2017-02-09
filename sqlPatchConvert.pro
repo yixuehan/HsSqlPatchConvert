@@ -38,6 +38,9 @@ dst_dir = $$OUT_PWD/debug/conf/
 } else {
 LIBS += "D:/boost_1_62_0/lib/release/libboost_locale-vc140-mt-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/release/libboost_regex-vc140-mt-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/release/libboost_filesystem-vc140-mt-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/release/libboost_system-vc140-mt-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/release/libboost_date_time-vc140-mt-1_62.lib"
 dst_dir = $$OUT_PWD/release/conf/
 }
 

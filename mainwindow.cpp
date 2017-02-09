@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
-#include <QFileInfo>
 #include <QApplication>
 #include <QClipboard>
 
@@ -27,16 +26,17 @@ MainWindow::~MainWindow()
 void MainWindow::on_addField_clicked()
 {
     QFileDialog fileDialog ;
-    QFileInfo fileInfo ;
     fileDialog.setDirectory(toQStr(getSetting()->get<string>("basePath")));
     fileDialog.setFileMode(QFileDialog::ExistingFiles);
     if ( fileDialog.exec() ) {
        for ( auto & fileName : fileDialog.selectedFiles() ) {
           // 如果之前没选过此文件
-          fileInfo.setFile(fileName);
-          if ( ui->listMod->findItems(fileInfo.baseName(), Qt::MatchExactly).count() == 0 ) {
-             ui->listMod->addItem(fileInfo.baseName());
-             selectedFiles[toStr(fileInfo.baseName())] = getSqlPatch(toStr(fileName)) ;
+          auto baseName = boost::filesystem::basename(toStr(fileName)) ;
+          auto qBaseName = toQStr(baseName) ;
+          if ( ui->listMod->findItems(qBaseName, Qt::MatchExactly).count() == 0 ) {
+             ui->listMod->addItem(qBaseName);
+             selectedFiles[baseName] = getSqlPatch(toStr(fileName)) ;
+             qDebug() << qBaseName ;
           }
        }
     }

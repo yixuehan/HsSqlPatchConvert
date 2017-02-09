@@ -1,5 +1,4 @@
 #include "sqlpatch.h"
-#include <QFileInfo>
 
 // 表结构的特化
 template<>

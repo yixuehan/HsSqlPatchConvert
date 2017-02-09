@@ -1,6 +1,7 @@
 #include "sqlpatch.h"
-#include <QFileInfo>
+#include <boost/filesystem.hpp>
 
+// 获取相应文件的处理对象
 shared_ptr<SqlPatchInterface> getSqlPatch(const string &strFileName)
 {
    // 如果后缀是table_design
@@ -9,9 +10,9 @@ shared_ptr<SqlPatchInterface> getSqlPatch(const string &strFileName)
       return shared_ptr<SqlPatchInterface>(new SqlPatch<SqlTable>(strFileName)) ;
    }
    // 如果是sysconfig.xml
-   QFileInfo fileInfo ;
-   fileInfo.setFile(toQStr(strFileName));
-   if ( fileInfo.baseName() == "sysconfig" ) {
+   auto baseName = boost::filesystem::basename(strFileName) ;// p( strFileName ) ;
+   //qDebug() << toQStr(baseName) ;
+   if ( baseName == "sysconfig" ) {
       return shared_ptr<SqlPatchInterface>(new SqlPatch<SqlConfig>(strFileName)) ;
    }
    return nullptr ;

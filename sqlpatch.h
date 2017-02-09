@@ -6,11 +6,11 @@
 #include <boost/format.hpp>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
-#include <QDate>
 #include <QDebug>
 #include <algorithm>
 #include <QMessageBox>
-#include <QFileInfo>
+#include <boost/filesystem.hpp>
+#include <boost/date_time.hpp>
 using namespace std ;
 
 struct SqlTable
@@ -136,8 +136,9 @@ public:
       //qDebug() << toQStr("strBase:" + strBase + "|||strVer:" + strVer + "|||fmtCopy" + fmtCopy.str()) ;
       fmtNote % (std::stoi(strVer)+1) ;
       
-      QDate d = QDate::currentDate(); 
-      fmtNote % d.year() % d.month() % d.day() 
+      boost::gregorian::date d(boost::gregorian::day_clock::local_day()) ;
+      
+      fmtNote % (int)d.year() % (int)d.month() % (int)d.day() 
               % getSetting()->get<string>("modifyNo")
               % getSetting()->get<string>("userName")
               % getSetting()->get<string>("applyUserName")
@@ -152,14 +153,9 @@ public:
       
       // ¼ÇÂ¼¼ôÇÐÄÚÈÝ
       struct CopyInfo copyInfo ;
-      
-      QFileInfo fileInfo ;
-      fileInfo.setFile(toQStr(mapSqlInfo[strBase].sqlFileName));
-      copyInfo.name = toStr(fileInfo.baseName()) ;
+      copyInfo.name = boost::filesystem::basename( mapSqlInfo[strBase].sqlFileName ) ;
       copyInfo.strCopy = fmtCopy.str() ;
       mapCopy[copyInfo.name] = copyInfo ;
-      
-      //qDebug() << toQStr(note + ":" + beginNote + ":" + endNote) ;
    }
 
    void setSelectedFields( const vector<string> &fields )
