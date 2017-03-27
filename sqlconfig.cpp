@@ -1,26 +1,17 @@
-#include "sqlpatch.h"
+#include "sqlconfig.h"
 
-//  系统配置的特化
-template<>
-const vector<string> SqlPatch<SqlConfig>::getTableFields() const
+bool SqlConfig::bInit = false ;
+
+SqlConfig::SqlConfig(const string &strFile)
+   :SqlPatchInterface(strFile)
 {
-   
- //  string strPrev ;
+   init() ;
+}
+
+const vector<string> SqlConfig::getTableFields() const
+{
    if ( fields.empty() ) {
       for ( auto &node : pt.get_child("sysconfig.items") ) {
-         // if ( "tablefield" != node.first ) continue ;
-   //      switch ( node.second.get<int>("dataType")) {
-   //      case 0 :
-   //         strPrev = "int_config_" ;
-   //         break ;
-   //      case 1 :
-   //         strPrev = "char_config_" ;
-   //         break ;
-   //      case 2 :
-   //         strPrev = "str_config_" ;
-   //         break ;      
-   //      }
-         // sqlConfig ;
          string id = node.second.get<string>("id") ;
          if ( id >= "46000" && id < "47000" ) {
             mapTableInfo[id].id = id ;
@@ -40,20 +31,20 @@ const vector<string> SqlPatch<SqlConfig>::getTableFields() const
    return fields ;
 }
 
-template<>
-void SqlPatch<SqlConfig>::genSql()
+
+void SqlConfig::genSql()
 {
-   genSql( "sqlConfig" ) ;
+   SqlPatchInterface::genSql( "sqlConfig" ) ;
 }
 
-template<>
-void SqlPatch<SqlConfig>::genAdd( const string &strBase )
+
+void SqlConfig::genAdd( const string &strBase )
 {
    // 获取sql模板
    boost::format fmtSql(getSetting()->get<string>(strBase + ".sqlAdd")) ;
    // id    配置名称  配置类型  数据类型  char   int str  remark  manager access
    boost::format fmtNote(getSetting()->get<string>(strBase + ".noteFmt")) ;
-   for ( const auto &stdfield : /*mapSqlInfo[strBase].*/selectedFields ) {
+   for ( const auto &stdfield : selectedFields ) {
       fmtSql.clear() ;
       fmtNote.clear() ;
       auto & info = mapTableInfo[stdfield] ;
@@ -67,13 +58,10 @@ void SqlPatch<SqlConfig>::genAdd( const string &strBase )
       fmtNote % info.id % info.name ;
       mapSqlInfo[strBase].changeNote += fmtNote.str() + " " ;
    }
-//   QMessageBox msg ;
-//   msg.setText(toQStr(strTableName + ":" + note)) ;
-//   msg.exec() ;
 }
 
-template<>
-void SqlPatch<SqlConfig>::specialInit()
+
+void SqlConfig::init()
 {
    if ( !bInit ) {
       mapSqlInfo["sqlConfig"].sqlFileName = getSetting()->get<string>("sqlConfig.fileName") ;
@@ -82,15 +70,24 @@ void SqlPatch<SqlConfig>::specialInit()
       std::copy(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>(), 
                 std::back_inserter(mapSqlInfo["sqlConfig"].sqlOldText)) ;
       ifs.close();
+      bInit = true ;
    }
 }
 
-template<>
-void SqlPatch<SqlConfig>::writeSql()
+
+void SqlConfig::writeSql()
 {
-   
    if ( !mapSqlInfo["sqlConfig"].sqlText.empty() ) {
       genNote( "sqlConfig") ;
-      writeSql( "sqlConfig" ) ;      
+      SqlPatchInterface::writeSql( "sqlConfig" ) ;
    }
 }
+
+//
+//void SqlConfig::setSelectedFields( const vector<string> &fields )
+//{
+//   QMessageBox msg ;
+//   msg.setText("SqlConfig::setSelectedFields") ;
+//   msg.exec( ) ;
+//   selectedFields = fields ;
+//}

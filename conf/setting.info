@@ -1,3 +1,5 @@
+userName "王  凯"
+applyUserName "王  凯"
 basePath E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝
 dataTypeFile E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/公共资源/datatypes.xml
 stdfieldsFile E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/公共资源/stdfields.xml
@@ -140,11 +142,54 @@ sqlConfig
    sqlEnd "--写在最后" 
 }
 
-ori2InterfaceConf conf/ori2Interface.info
-userName "王  凯"
-applyUserName "王  凯"
-modifyNo M201701180367
-newInterface
+sqlError
 {
-    file E:/恒生电子/svn_new/trunk/Sources/DevCodes/领投宝/业务逻辑/消息推送/服务/LS_消息推送_标签设置.service_design
+   preLength 3
+   notePosStr "-- 修改版本   修改日期   修改单           修改人    申请人     修改说明\r\n"
+   note "-- V8.15.1.%d %04d%02d%02d   %s   %s    %s      %s\r\n"
+   noteFmt "增加错误号"
+   itemName "精英汇系统错误代码 [COM]             (370000-373000)  其中（370000-371499）为表级错误"
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/user_Com_ErrorPatch.sql
+   listCount 10
+   sqlAdd "declare v_rowcount number(5);\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual\r\n"\
+          "    where exists (select 1 from hs_user.errormsg where error_no = %1%);\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    insert into hs_user.errormsg(error_no,error_info) values ( %1%, '%2%');\r\n"\
+          "  else\r\n"\
+          "    update hs_user.errormsg set error_info = '%2%' where error_no = %1%;\r\n"\
+          "  end if;\r\n"\
+          "  commit;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
 }
+
+sqlBusiness
+{
+   preLength 3
+   notePosStr "-- 修改版本   修改日期    修改单          修改人     申请人   修改说明\r\n"
+   note "-- V8.15.1.%d %04d%02d%02d   %s   %s    %s   %s\r\n"
+   noteFmt "增加业务标志"
+   idBegin 38000
+   idEnd 39000
+   fileName E:/恒生电子/svn_new/trunk/Sources/SqlPatch/user_Com_BusinFlagPatch.sql
+   listCount 10
+   sqlAdd "declare v_rowcount number(5);\r\n"\
+          "begin\r\n"\
+          "  select count(*) into v_rowcount from dual\r\n"\
+          "     where exists (select 1 from hs_user.businflag where business_flag = %1%);\r\n"\
+          "  if v_rowcount = 0 then\r\n"\
+          "    insert into hs_user.businflag (business_flag, business_name, business_kind, business_subject, business_group, borrow_lend, join_business_flag, opp_business_flag)\r\n"\
+          "       values (%1%, '%2%', '%3%', '%4%', '%5%', '%6%', %7%, %8%);\r\n"\
+          "  else\r\n"\
+          "     update hs_user.businflag set business_name = '%2%', business_subject = '%4%', business_group = '%5%', borrow_lend = '%6%', join_business_flag = %7%, opp_business_flag = %8% where business_flag = %1%;\r\n"\
+          "  end if;\r\n"\
+          "  commit;\r\n"\
+          "end;\r\n"\
+          "/\r\n"
+   sqlEnd "--写在最后" 
+}
+
+

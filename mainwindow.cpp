@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
    QObject::connect(uiField.listNew, SIGNAL(on_listNew_doubleClicked(QModelIndex)),
                     this, SLOT(on_listNew_doubleClicked(const QModelIndex &))) ;
+//   SqlPatch<SqlTable> t ;
+//   t.setSelectedFields(vector<string>());
 }
 
 MainWindow::~MainWindow()
@@ -62,6 +64,7 @@ void MainWindow::on_listMod_doubleClicked(const QModelIndex &index)
       for ( int i = 0 ; i < uiField.listNew->count(); ++i ) {
          fields.push_back(toStr(uiField.listNew->item(i)->text())) ;
       }
+      qDebug() << "fileName:" << toQStr(fileName) ;
       selectedFiles[fileName]->setSelectedFields(std::move(fields)) ;
    }
 }
@@ -87,8 +90,10 @@ void MainWindow::on_genSqlPatch_clicked()
    for ( auto pair : selectedFiles ) {
       pair.second->genSql() ;
    }
-   SqlPatch<SqlTable>::writeSql();
-   SqlPatch<SqlConfig>::writeSql();
+   SqlTable::writeSql();
+   SqlConfig::writeSql();
+   SqlError::writeSql() ;
+   SqlBusiness::writeSql() ;
    msg.setText(toQStr("转换完成"));
    msg.exec();
    for ( const auto &copyValue : *getCopy() ) {
@@ -110,4 +115,9 @@ void MainWindow::on_listCopy_doubleClicked(const QModelIndex &index)
    // 放入剪切板
    QClipboard *board = QApplication::clipboard();  
    board->setText(toQStr(strCopy));
+}
+
+void MainWindow::on_genSource_clicked()
+{
+    
 }

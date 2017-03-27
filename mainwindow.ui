@@ -65,9 +65,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="genSource">
+          <property name="text">
+           <string>生成资源申请</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="genSqlPatch">
           <property name="text">
-           <string>生成</string>
+           <string>生成SqlPatch</string>
           </property>
          </widget>
         </item>

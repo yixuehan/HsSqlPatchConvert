@@ -2,10 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include <map>
-#include <pubfunc.h>
+
+
 #include "ui_fieldchioce.h"
 #include "sqlpatch.h"
+#include "pubfunc.h"
+#include "sqlbusiness.h"
+#include "sqlconfig.h"
+#include "sqlerror.h"
+#include "sqltable.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -29,6 +37,8 @@ private slots:
    void on_listNew_doubleClicked(const QModelIndex &index);
    
    void on_listCopy_doubleClicked(const QModelIndex &index);
+   
+   void on_genSource_clicked();
    
 private:
 

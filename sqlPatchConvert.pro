@@ -13,17 +13,24 @@ TARGET = sqlPatchConvert
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    pubfunc.cpp \
-    sqlpatch.cpp \
+SOURCES += sqlbusiness.cpp \
     sqlconfig.cpp \
-    sqltable.cpp
+    sqlerror.cpp \
+    sqltable.cpp \
+    sqlpatch.cpp \
+    pubfunc.cpp \
+    main.cpp \
+    mainwindow.cpp
+    
     
 
 HEADERS  += mainwindow.h \
     pubfunc.h \
-    sqlpatch.h
+    sqlpatch.h \
+    sqlerror.h \
+    sqltable.h \
+    sqlconfig.h \
+    sqlbusiness.h
 
 FORMS    += mainwindow.ui \
     fieldchioce.ui
@@ -34,6 +41,9 @@ CONFIG(debug, debug|release) {
 #LIBS += "D:/boost_1_62_0/lib/debug/boost_filesystem-vc140-mt-gd-1_62.dll"
 LIBS += "D:/boost_1_62_0/lib/debug/libboost_locale-vc140-mt-gd-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/debug/libboost_regex-vc140-mt-gd-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/debug/libboost_date_time-vc140-mt-gd-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/debug/libboost_filesystem-vc140-mt-gd-1_62.lib"
+LIBS += "D:/boost_1_62_0/lib/debug/libboost_system-vc140-mt-gd-1_62.lib"
 dst_dir = $$OUT_PWD/debug/conf/
 } else {
 LIBS += "D:/boost_1_62_0/lib/release/libboost_locale-vc140-mt-1_62.lib"
@@ -41,11 +51,15 @@ LIBS += "D:/boost_1_62_0/lib/release/libboost_regex-vc140-mt-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/release/libboost_filesystem-vc140-mt-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/release/libboost_system-vc140-mt-1_62.lib"
 LIBS += "D:/boost_1_62_0/lib/release/libboost_date_time-vc140-mt-1_62.lib"
-dst_dir = $$OUT_PWD/release/conf/
+dst_dir = $$OUT_PWD/release/conf
 }
 
 src_dir = $$PWD/conf
-#src_dir ~= s,/,\\,g
-#dst_dir ~= s,/,\\,g
-!exists($$dst_dir):system(xcopy $$src_dir $$dst_dir /y /e)
+src_dir ~= s,/,\\,g
+dst_dir ~= s,/,\\,g
+
+!exists($$dst_dir){
+   system(xcopy $$src_dir $$dst_dir /Y /E /I)
+}
+
 

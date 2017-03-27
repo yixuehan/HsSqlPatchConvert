@@ -32,7 +32,7 @@ struct CopyInfo
    string strCopy ;
 };
 
-// 获取剪切板
+// 获取剪切信息
 shared_ptr<map<string, CopyInfo>> getCopy() ;
 
 // 获取字段名获取对应的oracle类型和默认值
